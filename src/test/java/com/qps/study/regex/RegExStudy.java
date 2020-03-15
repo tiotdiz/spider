@@ -60,9 +60,8 @@ public class RegExStudy {
 			System.out.println(result);
 		}
 	}
-
 	public static void main(String[] args) {
-		indexTest();
+		patternTest();
 	}
 
 }

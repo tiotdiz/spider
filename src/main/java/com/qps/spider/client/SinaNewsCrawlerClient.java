@@ -6,11 +6,26 @@ import java.io.FileReader;
 import java.io.RandomAccessFile;
 
 import com.qps.utils.CloseUtil;
+import com.qps.utils.IOUtil;
 
 public class SinaNewsCrawlerClient {
+	public static void main(String[] args) {
+		test();
+	}
 	
-	public static void search(String indexPath, String dataPath, String encoding){
-		String urlStr = "http://news.sina.com.cn/c/2018-10-16/doc-ihmhafir9302901.shtml";
+	public static void test(){
+		String urlStr = "http://news.sina.com.cn/o/2018-11-06/doc-ihmutuea7351575.shtml";
+		
+		String liDate = "";
+		String baseDir = "E:" + File.separator + "spider_db" + liDate + File.separator;
+		
+		String dataPath = baseDir  +"spider_data.dat";
+		String indexPath = baseDir + "spider_index.txt";
+		String encoding = "utf-8";
+		search(urlStr, indexPath, dataPath, encoding);
+	}
+	
+	public static void search(String urlStr, String indexPath, String dataPath, String encoding){
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(indexPath));
@@ -20,34 +35,11 @@ public class SinaNewsCrawlerClient {
 				if(strArr[0].equals(urlStr)){
 					long offset = Long.valueOf(strArr[4]);
 					int size = Integer.valueOf(strArr[5]);
-					System.out.println(readDataFile(offset, size, dataPath, encoding));
+					System.out.println(IOUtil.readDataFile(offset, size, dataPath, encoding));
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static String readDataFile(long offset, int size, String dataPath, String encoding){
-		String result = "";
-		RandomAccessFile raf = null;
-		try {
-			raf = new RandomAccessFile(dataPath, "r");
-			raf.seek(offset);
-			byte[] b = new byte[size];
-			raf.read(b);
-			System.out.println(new String(b, encoding));
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			CloseUtil.close(raf);
-		}
-		return result;
-	}
-	
-	public static void main(String[] args) {
-		String dataPath = "E:" + File.separator + "spider_data.dat";
-		String indexPath = "E:" + File.separator + "spider_index.txt";
-		search(indexPath, dataPath, "utf-8");
 	}
 }
